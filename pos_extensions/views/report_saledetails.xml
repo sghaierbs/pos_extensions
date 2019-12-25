@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_saledetails_inherit" inherit_id="point_of_sale.report_saledetails">
+            
+
+            <!-- Add Header Total for each product line -->
+            <xpath expr="//table[1]//thead//tr" position="inside">
+                <th>Total</th>
+            </xpath>
+
+            <!-- Add Total value for each product line -->
+            <xpath expr="//table[1]//tbody//tr" position="inside">
+                <td>
+                    <t t-esc="line['price_subtotal_incl']" />
+                </td>
+            </xpath>
+
+            <xpath expr="//table[3]" position="after">
+                <br/>
+                <h3>Total par catégorie</h3>
+                <table  class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr t-foreach='categories' t-as='category'>
+                        <td><t t-esc="category['name']" /></td>
+                        <td>
+                    <t t-esc="category['price_subtotal_incl']" t-options="{'widget': 'float', 'precision': currency_precision}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </xpath>
+            
+
+        </template>
+    </data>
+</odoo>
+
+
+
