@@ -11,12 +11,12 @@
     'depends': ['point_of_sale'],
     'data': [
         'views/report_saledetails.xml',
-        # 'views/pos_restaurant_templates.xml',
+        'views/pos_restaurant_templates.xml',
     ],
     'demo': [
         
     ],
-    # 'qweb': ['static/src/xml/pos.xml'],
+    'qweb': ['static/src/xml/pos.xml'],
     'installable': True,
     'application': False,
     

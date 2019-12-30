@@ -17,4 +17,10 @@
             </div>
         </div>
     </t>
+
+    <t t-name="OrderlineCancelNoteButton">
+        <div class='control-button'>
+            <i class='fa fa-tag' /> Ne pas faire
+        </div>
+    </t>
 </templates>

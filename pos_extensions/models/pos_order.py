@@ -91,6 +91,13 @@ class ReportSaleDetails(models.AbstractModel):
                     taxes[0]['base_amount'] += line.price_subtotal_incl
             
         st_line_ids = self.env["account.bank.statement.line"].search([('pos_statement_id', 'in', orders.ids)]).ids
+        # print('#### ids ',st_line_ids)
+        # rec = self.env["account.bank.statement.line"].read_group([('id', 'in', st_line_ids),('amount','<',0)],['journal_id.name', 'amount'], ['journal_id'])
+        # print('##### returned value by read_group ', rec)
+        # for el in rec:
+        #     print('##### returned amount ',el['amount'])
+        #     print('##### returned journal ',el['journal_id'])
+        #     print('##### -------------------------------------------')
         if st_line_ids:
             self.env.cr.execute("""
                 SELECT aj.name, sum(amount) total
@@ -103,8 +110,23 @@ class ReportSaleDetails(models.AbstractModel):
                 GROUP BY aj.name
             """, (tuple(st_line_ids),))
             payments = self.env.cr.dictfetchall()
+            
+            self.env.cr.execute("""
+                SELECT aj.name, sum(amount) total
+                FROM account_bank_statement_line AS absl,
+                     account_bank_statement AS abs,
+                     account_journal AS aj 
+                WHERE absl.statement_id = abs.id
+                    AND abs.journal_id = aj.id 
+                    AND absl.id IN %s 
+                    AND absl.amount < 0
+                GROUP BY aj.name
+            """, (tuple(st_line_ids),))
+            returns = self.env.cr.dictfetchall()
+            print('##### returns ',returns)
         else:
             payments = []
+            returns = []
 
         return {
             'categories':sorted([{
@@ -114,6 +136,7 @@ class ReportSaleDetails(models.AbstractModel):
             'currency_precision': user_currency.decimal_places,
             'total_paid': user_currency.round(total),
             'payments': payments,
+            'returns': returns,
             'company_name': self.env.user.company_id.name,
             'taxes': list(taxes.values()),
             'products': sorted([{

@@ -36,7 +36,24 @@
                     </tbody>
                 </table>
             </xpath>
-            
+
+            <xpath expr="//table[3]" position="after">
+                <h3>Montant retournés</h3>
+                <table  class="table table-sm">
+                    <thead><tr>
+                        <th>Nom</th>
+                        <th>Total</th>
+                    </tr></thead>
+                    <tbody>
+                    <tr t-foreach='returns' t-as='element'>
+                        <td><t t-esc="element['name']" /></td>
+                        <td><t t-esc="element['total']" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <br/>
+            </xpath>
 
         </template>
     </data>
