@@ -60,10 +60,12 @@ class ReportSaleDetails(models.AbstractModel):
         user_currency = self.env.user.company_id.currency_id
 
         total = 0.0
+        customer_count = 0
         products_sold = {}
         taxes = {}
         categories = {}
         for order in orders:
+            customer_count += order.customer_count
             if user_currency != order.pricelist_id.currency_id:
                 total += order.pricelist_id.currency_id._convert(
                     order.amount_total, user_currency, order.company_id, order.date_order or fields.Date.today())
@@ -91,13 +93,6 @@ class ReportSaleDetails(models.AbstractModel):
                     taxes[0]['base_amount'] += line.price_subtotal_incl
             
         st_line_ids = self.env["account.bank.statement.line"].search([('pos_statement_id', 'in', orders.ids)]).ids
-        # print('#### ids ',st_line_ids)
-        # rec = self.env["account.bank.statement.line"].read_group([('id', 'in', st_line_ids),('amount','<',0)],['journal_id.name', 'amount'], ['journal_id'])
-        # print('##### returned value by read_group ', rec)
-        # for el in rec:
-        #     print('##### returned amount ',el['amount'])
-        #     print('##### returned journal ',el['journal_id'])
-        #     print('##### -------------------------------------------')
         if st_line_ids:
             self.env.cr.execute("""
                 SELECT aj.name, sum(amount) total
@@ -123,7 +118,6 @@ class ReportSaleDetails(models.AbstractModel):
                 GROUP BY aj.name
             """, (tuple(st_line_ids),))
             returns = self.env.cr.dictfetchall()
-            print('##### returns ',returns)
         else:
             payments = []
             returns = []
@@ -137,6 +131,7 @@ class ReportSaleDetails(models.AbstractModel):
             'total_paid': user_currency.round(total),
             'payments': payments,
             'returns': returns,
+            'customer_count':customer_count,
             'company_name': self.env.user.company_id.name,
             'taxes': list(taxes.values()),
             'products': sorted([{

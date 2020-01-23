@@ -35,6 +35,16 @@
                     </tr>
                     </tbody>
                 </table>
+                <br/>
+                <h3>Nombre des couverts</h3>
+                <table  class="table table-sm">
+                    <tbody>
+                    <tr>
+                        <td>Couverts</td>
+                        <td><t t-esc="customer_count"/></td>
+                    </tr>
+                    </tbody>
+                </table>
             </xpath>
 
             <xpath expr="//table[3]" position="after">
