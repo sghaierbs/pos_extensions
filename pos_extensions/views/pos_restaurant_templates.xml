@@ -6,6 +6,7 @@
           	<script type="text/javascript" src="/pos_extensions/static/src/js/models.js"></script>
               <script type="text/javascript" src="/pos_extensions/static/src/js/floor.js"></script>
               <script type="text/javascript" src="/pos_extensions/static/src/js/notes.js"></script>
+              <script type="text/javascript" src="/pos_extensions/static/src/js/devices.js"></script>
           </xpath>
           <xpath expr="//link[@id='pos-stylesheet']" position="after">
               <!-- <link rel="stylesheet" href="/pos_restaurant/static/src/css/restaurant.css"/> -->

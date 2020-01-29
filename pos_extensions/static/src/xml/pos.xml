@@ -23,4 +23,16 @@
             <i class='fa fa-tag' /> Ne pas faire
         </div>
     </t>
+
+    <t t-extend="SaleDetailsReport">
+        <t t-jquery="div.orderlines" t-operation="after">
+            <br/>
+            <line>
+                <left>Nombre Couverts</left>
+                <right>
+                    <t t-esc='customer_count' />
+                </right>
+            </line>
+        </t>
+    </t>
 </templates>
